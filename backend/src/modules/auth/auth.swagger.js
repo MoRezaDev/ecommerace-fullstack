@@ -21,8 +21,11 @@
  *              type:   object
  *              required:
  *                  - code
+ *                  - mobile
  *              properties:
  *                  code:
+ *                      type: number
+ *                  mobile:
  *                      type: number
  */
 
@@ -67,4 +70,16 @@
  *      responses:
  *          200:
  *              description: success!
+ */
+
+/**
+ * @swagger
+ *  /auth/logout:
+ *      get:
+ *          summary: Logout and clear token
+ *          tags:
+ *              -   Auth
+ *          responses:
+ *              200:
+ *                  description: success!
  */

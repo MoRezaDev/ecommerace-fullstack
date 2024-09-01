@@ -12,6 +12,7 @@ class AuthServices {
   }
 
   async checkUserExists(credential) {
+    if (!credential) throw new createHttpError.Forbidden("no user found");
     const user = await this.#userModel
       .findOne({
         $or: [{ email: credential }, { mobile: credential }],
@@ -72,7 +73,6 @@ class AuthServices {
   async checkOTP(code, mobile) {
     const user = await this.checkUserExists(mobile);
     const now = Date.now();
-
     if (user.otp?.code !== Number(code) || user.otp?.expiresIn < now)
       throw new createHttpError.Forbidden(
         "invalid code or code expired, try to get new code"

@@ -49,8 +49,14 @@ class UserServices {
     return result;
   }
 
-  async updateUserProfilePicture(userId,file) {
-    
+  async updateUserProfilePicture(userId, file) {}
+
+  async getUserSession(userId) {
+    const user = await this.checkUserExists(userId);
+    const newUserObj = user.toObject();
+    delete newUserObj.password;
+    delete newUserObj.otp;
+    return newUserObj;
   }
 }
 

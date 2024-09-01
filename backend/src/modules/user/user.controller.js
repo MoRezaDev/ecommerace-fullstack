@@ -34,6 +34,15 @@ class UserController {
     }
   }
 
+  async getUserSession(req, res, next) {
+    try {
+      const user = await this.#services.getUserSession(req.userId);
+      return res.json(user);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async updateUserComment(req, res, next) {
     try {
     } catch (err) {

@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const connectDb = require("./config/database.config");
 const swaggerConfig = require("./config/swagger.config");
-const allExceptionHandllers = require("./src/middlewares/errors.handler");
+const allExceptionHandllers = require("./src/middlewares/handlers/errors.handler");
 const { MainRouter } = require("./src/app.routes");
 
 async function main() {
