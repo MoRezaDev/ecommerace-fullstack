@@ -49,7 +49,25 @@ class UserServices {
     return result;
   }
 
-  async updateUserProfilePicture(userId, file) {}
+  async updateUserProfilePicture(userId, file) {
+    const urlPath = `http://localhost:5025/profile-picture/${userId}/${file.filename}`;
+    try {
+      const user = await this.checkUserExists(userId);
+      user.img_url = urlPath;
+      const result = await user.save();
+      return result.img_url;
+    } catch (err) {
+      throw new createHttpError.InternalServerError(err);
+    }
+  }
+
+  async deleteUserProfilePicture(userId) {
+    const user = await this.checkUserExists(userId);
+
+    user.img_url = "";
+    const result = await user.save();
+    return result.img_url;
+  }
 
   async getUserSession(userId) {
     const user = await this.checkUserExists(userId);
@@ -57,6 +75,16 @@ class UserServices {
     delete newUserObj.password;
     delete newUserObj.otp;
     return newUserObj;
+  }
+
+  async deleteUser(userId) {
+    const user = await this.checkUserExists(userId);
+
+    try {
+      await user.deleteOne();
+    } catch (err) {
+      throw new createHttpError.InternalServerError(err);
+    }
   }
 }
 

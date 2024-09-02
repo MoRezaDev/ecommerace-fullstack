@@ -1,9 +1,5 @@
 const autoBind = require("auto-bind");
-const UserModel = require("./user.model");
 const userServices = require("./user.services");
-const updateProfilePicMulter = require("../../middlewares/multer/profile-picture.multer");
-const multer = require("multer");
-const createHttpError = require("http-errors");
 
 class UserController {
   #services;
@@ -23,12 +19,21 @@ class UserController {
   }
 
   async updateUserProfilePicture(req, res, next) {
+    const img_url = await this.#services.updateUserProfilePicture(
+      req.userId,
+      req.file
+    );
     try {
-      const imgUrl = await this.#services.updateUserProfilePicture(
-        req.userId,
-        req.file
-      );
-      return res.json({ imgUrl });
+      res.json({ message: "success", img_url });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteUserProfilePicture(req, res, next) {
+    try {
+      const img_url = await this.#services.deleteUserProfilePicture(req.userId);
+      return res.json({ message: "deleted successfull", img_url });
     } catch (err) {
       next(err);
     }
@@ -45,6 +50,17 @@ class UserController {
 
   async updateUserComment(req, res, next) {
     try {
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  //for Admin....
+  async deleteUser(req, res, next) {
+    const { userId } = req.body;
+    try {
+      await this.#services.deleteUser(userId);
+      return res.json({ message: "success!" });
     } catch (err) {
       next(err);
     }
