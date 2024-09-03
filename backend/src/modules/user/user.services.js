@@ -68,31 +68,29 @@ class UserServices {
       // Extract the URL and replace the base path with the local path
       const imgUrl = user.img_url;
       const localPath = imgUrl.replace(
-        "http://localhost:5207",
-        "./../../public/profile-pic"
+        "http://localhost:5025",
+        "./src/public/"
       );
 
-      // Get the absolute path for deletion
-      const filePath = path.resolve(localPath);
-
       // Delete the file asynchronously
-      await fs.promises.unlink(filePath);
+      await fs.promises.unlink(localPath);
 
-      console.log(`File ${filePath} deleted successfully`);
+      // console.log(`File ${localPath} deleted successfully`);
     } catch (error) {
       console.error(`Error deleting file: ${error}`);
-      throw new createHttpError.InternalServerError(error);
+      // throw new createHttpError.InternalServerError(error);
     }
   }
 
   async deleteUserProfilePicture(userId) {
     const user = await this.checkUserExists(userId);
 
+    //delete file from backend
+    await this.deletePicture(user);
+
     user.img_url = "";
     const result = await user.save();
 
-    //delete file from backend
-    await this.deletePicture(user);
     return result.img_url;
   }
 
