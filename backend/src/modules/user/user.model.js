@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   family: { type: String },
   address: { type: String },
+  location: {
+    latitude: { type: Number },
+    longitude: { type: Number},
+  },
   email: { type: String },
   password: { type: String },
   history: [{ type: mongoose.Types.ObjectId, ref: "History" }],

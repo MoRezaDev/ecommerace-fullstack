@@ -24,7 +24,8 @@ class UserServices {
   async updateUser(credential) {
     //credential would be mobile number or ID
 
-    const { _id, name, family, address, email, password, mobile } = credential;
+    const { _id, name, family, address, email, password, mobile, location } =
+      credential;
     const user = await this.checkUserExists(_id);
 
     //update if any fields need
@@ -45,6 +46,11 @@ class UserServices {
     }
     if (mobile) {
       user.mobile = mobile;
+    }
+
+    if (location) {
+      user.location.latitude = location.latitude;
+      user.location.longitude = location.longitude;
     }
 
     const result = await user.save();
@@ -102,6 +108,9 @@ class UserServices {
     return newUserObj;
   }
 
+  async updateUserCard() {}
+
+  //for Admin access
   async deleteUser(userId) {
     const user = await this.checkUserExists(userId);
 

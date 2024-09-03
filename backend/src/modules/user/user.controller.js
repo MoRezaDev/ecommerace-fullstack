@@ -55,6 +55,13 @@ class UserController {
     }
   }
 
+  async updateUserCard(req, res, next) {
+    try {
+    } catch (err) {
+      next(err);
+    }
+  }
+
   //for Admin....
   async deleteUser(req, res, next) {
     const { userId } = req.body;
