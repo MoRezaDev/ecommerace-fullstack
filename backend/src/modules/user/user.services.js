@@ -1,6 +1,8 @@
 const autoBind = require("auto-bind");
 const UserModel = require("./user.model");
 const createHttpError = require("http-errors");
+const path = require("path");
+const fs = require("fs");
 
 class UserServices {
   #userModel;
@@ -61,11 +63,36 @@ class UserServices {
     }
   }
 
+  async deletePicture(user) {
+    try {
+      // Extract the URL and replace the base path with the local path
+      const imgUrl = user.img_url;
+      const localPath = imgUrl.replace(
+        "http://localhost:5207",
+        "./../../public/profile-pic"
+      );
+
+      // Get the absolute path for deletion
+      const filePath = path.resolve(localPath);
+
+      // Delete the file asynchronously
+      await fs.promises.unlink(filePath);
+
+      console.log(`File ${filePath} deleted successfully`);
+    } catch (error) {
+      console.error(`Error deleting file: ${error}`);
+      throw new createHttpError.InternalServerError(error);
+    }
+  }
+
   async deleteUserProfilePicture(userId) {
     const user = await this.checkUserExists(userId);
 
     user.img_url = "";
     const result = await user.save();
+
+    //delete file from backend
+    await this.deletePicture(user);
     return result.img_url;
   }
 
