@@ -39,7 +39,3 @@ async function main() {
 }
 
 main();
-
-
-
-

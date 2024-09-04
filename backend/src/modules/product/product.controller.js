@@ -12,57 +12,87 @@ class ProductController {
   async getProduct(req, res, next) {
     const { productId } = req.body;
     try {
-      const product = await this.#services.getProductServices(productId);
+      const product = await this.#services.getProductByIdServic(productId);
       return res.json({ message: "success", product });
     } catch (err) {
       next(err);
     }
   }
 
-  async getProductBySlug(req, res, next) {
+  async getProductBySlugController(req, res, next) {
     const { slug } = req.body;
 
     try {
-      const product = await this.#services.getProductServices(slug);
+      const product = await this.#services.getProductBySlugService(slug);
       return res.json({ message: "success", product });
     } catch (err) {
       next(err);
     }
   }
 
-  async getProductsByCategory(req, res, next) {
+  async getProductsByCategoryController(req, res, next) {
     try {
     } catch (err) {
       next(err);
     }
   }
 
-  async uploadProductImages(req, res, next) {
+  async uploadProductImageMainController(req, res, next) {
     try {
-      const images = await this.#services.uploadProductImagesServices(
+      const image_main_url = await this.#services.uploadProductImageMainService(
+        req.file
+      );
+      return res.json({ message: "success", image_main_url });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async uploadProductImagesController(req, res, next) {
+    try {
+      const images_url = await this.#services.uploadProductImagesService(
         req.files
       );
-      return res.json({ message: "success", images });
+      return res.json({ message: "success", images_url });
     } catch (err) {
       next(err);
     }
   }
 
-  async createProduct(req, res, next) {
+  async createProductController(req, res, next) {
+    const {
+      name,
+      slug,
+      title,
+      description,
+      categoryId,
+      specification,
+      images,
+    } = req.body;
+    try {
+      const newProduct = await this.#services.createProductService({
+        name,
+        slug,
+        title,
+        description,
+        categoryId,
+        specification,
+        images,
+      });
+      return res.json({ message: "success", product: { ...newProduct } });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateProductController(req, res, next) {
     try {
     } catch (err) {
       next(err);
     }
   }
 
-  async updateProduct(req, res, next) {
-    try {
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async deleteProduct(req, res, next) {
+  async deleteProductController(req, res, next) {
     try {
     } catch (err) {
       next(err);
