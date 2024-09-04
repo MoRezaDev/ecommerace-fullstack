@@ -5,13 +5,13 @@ const productSchema = new mongoose.Schema({
   slug: { type: String },
   title: { type: String, required: true },
   description: { type: String, required: true },
-  category: { type: mongoose.Types.ObjectId, ref: "Category" },
-  specification: { type: mongoose.Schema.Types.Mixed },
+  category: { type: mongoose.Types.ObjectId, ref: "Category", required: true },
+  specification: { type: mongoose.Schema.Types.Mixed, required: true },
   images: {
-    images_url: [{ type: String }],
-    image_main_url: { type: String },
+    images_url: [{ type: String, required: true }],
+    image_main_url: { type: String, required: true },
   },
-  comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
+  comments: [{ type: mongoose.Types.ObjectId, ref: "Comment", required: true }],
 });
 
 const ProductModel = mongoose.model("Product", productSchema);
