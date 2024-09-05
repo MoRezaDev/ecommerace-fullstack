@@ -86,6 +86,24 @@ class ProductController {
   }
 
   async updateProductController(req, res, next) {
+    const { _id, name, slug, description, categoryId, specification } =
+      req.body;
+    try {
+      const product = await this.#services.updateProductService({
+        _id,
+        name,
+        slug,
+        description,
+        categoryId,
+        specification,
+      });
+      return res.json({ message: "success", product });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async addImagesToProductController(req, res, next) {
     try {
     } catch (err) {
       next(err);
@@ -94,6 +112,15 @@ class ProductController {
 
   async deleteProductController(req, res, next) {
     try {
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async clearProductController(req, res, next) {
+    try {
+      await this.#services.clearProductService();
+      return res.json({ message: "success" });
     } catch (err) {
       next(err);
     }

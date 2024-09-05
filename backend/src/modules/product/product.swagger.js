@@ -107,3 +107,56 @@
  *                  description: success!
  *
  */
+
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          updateProduct:
+ *              type: object
+ *              properties:
+ *                  _id:
+ *                      type: string
+ *                  name:
+ *                      type: string
+ *                  slug:
+ *                      type: string
+ *                  description:
+ *                      type: string
+ *                  categoryId:
+ *                      type: string
+ *                  specification:
+ *                      type: object
+ */
+
+/**
+ * @swagger
+ *  /product/update-product:
+ *      put:
+ *          summary: Update product details except images
+ *          tags:
+ *              -   Product
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: "#/components/schemas/updateProduct"
+ *                  application/json:
+ *                          schema:
+ *                              $ref: "#/components/schemas/updateProduct"
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
+ *  /product/clear:
+ *      delete:
+ *          summary: delete all Product Model Data
+ *          tags:
+ *              -   Product
+ *          responses:
+ *              200:
+ *                  description: success!
+ */

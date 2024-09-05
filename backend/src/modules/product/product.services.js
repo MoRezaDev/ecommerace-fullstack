@@ -162,9 +162,38 @@ class ProductController {
     }
   }
 
-  async updateProductService() {}
+  async updateProductService(product) {
+    const { _id, name, slug, description, categoryId, specification } = product;
+    const productObj = await this.checkExistsProduct(_id);
+    if (name) {
+      productObj.name = name;
+    }
+    if (slug) {
+      productObj.slug = slug;
+    }
+    if (description) {
+      productObj.description = description;
+    }
+    if (categoryId) {
+      productObj.category = new mongoose.Types.ObjectId(categoryId);
+    }
+    if (specification) {
+      const parsedSpec =
+        typeof specification === "string"
+          ? JSON.parse(specification)
+          : specification;
+      productObj.specification = { ...parsedSpec };
+    }
+
+    const result = await productObj.save();
+    return result.toObject();
+  }
 
   async deleteProductService() {}
+
+  async clearProductService() {
+    await this.#productModel.deleteMany();
+  }
 }
 
 module.exports = new ProductController();

@@ -6,6 +6,8 @@ const {
   uploadProductImagesController,
   uploadProductImageMainController,
   createProductController,
+  updateProductController,
+  clearProductController,
 } = require("./product.controller");
 
 const router = require("express").Router();
@@ -23,6 +25,8 @@ router.post(
 );
 
 router.post("/create", createProductController);
+router.put("/update-product", updateProductController);
+router.delete("/clear", clearProductController);
 
 module.exports = {
   ProductRoutes: router,
