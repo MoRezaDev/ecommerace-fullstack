@@ -34,6 +34,19 @@ const multerStorageMain = multer.diskStorage({
   },
 });
 
+//for add images to product
+const multerSotrageAddImages = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const { slug } = req.body;
+    cb(null, path.join(productTmpPath, "..", "product", slug));
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const uniqueId = uuidv4();
+    cb(null, `${uniqueId}${ext}`);
+  },
+});
+
 const uploadProductImages = multer({
   storage: multerStorage,
   limits: {
@@ -48,4 +61,15 @@ const uploadProductImageMain = multer({
   },
 });
 
-module.exports = { uploadProductImages, uploadProductImageMain };
+const addProductImages = multer({
+  storage: multerSotrageAddImages,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});
+
+module.exports = {
+  uploadProductImages,
+  uploadProductImageMain,
+  addProductImages,
+};

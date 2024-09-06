@@ -14,10 +14,15 @@ class ProductController {
     this.#productModel = ProductModel;
   }
 
-  async checkExistsProduct(productIdOrSlug) {
-    const product = await this.#productModel.findOne({
-      $or: [{ _id: productIdOrSlug }, { slug: productIdOrSlug }],
-    });
+  async checkExistsProduct(productId) {
+    const product = await this.#productModel.findOne({ _id: productId });
+
+    if (!product) throw new createHttpError.NotFound("product not found!");
+    return product;
+  }
+
+  async checkExistsProductBySlug(slug) {
+    const product = await this.#productModel.findOne({ slug: slug });
 
     if (!product) throw new createHttpError.NotFound("product not found!");
     return product;
@@ -187,6 +192,81 @@ class ProductController {
 
     const result = await productObj.save();
     return result.toObject();
+  }
+
+  async addImagesToProductService(files, slug) {
+    const product = await this.checkExistsProductBySlug(slug);
+
+    if (!files)
+      throw new createHttpError.BadRequest(
+        "there is problem with upload images, try again!"
+      );
+
+    for (const file of files) {
+      product.images.images_url.push(
+        `http://localhost:5025/product/${slug}/${file.filename}`
+      );
+    }
+
+    await product.save();
+    return product.images;
+  }
+
+  async changeMainImageService(filename, slug) {
+    const product = await this.checkExistsProductBySlug(slug);
+    const imgUrlpath = product.images.image_main_url.substring(
+      0,
+      product.images.image_main_url.lastIndexOf("/")
+    );
+
+    const pathName = path.join(
+      __dirname,
+      "..",
+      "..",
+      "public",
+      "product",
+      slug
+    );
+
+    //checking in folder
+    try {
+      const files = await fsPrmises.readdir(pathName);
+      //checking filename exist
+      const fileExists = files.some((file) => file === filename);
+      if (!fileExists)
+        throw new createHttpError.NotFound(
+          "file is not exist or invalid filename"
+        );
+
+      for (const file of files) {
+        let newFileName = file;
+
+        // Step 1: Remove 'main-' prefix if it exists
+        if (file.startsWith("main-")) {
+          newFileName = file.replace("main-", "");
+
+          // Rename the file on the filesystem
+          const oldPath = path.join(pathName, file);
+          const newPath = path.join(pathName, newFileName);
+          await fsPrmises.rename(oldPath, newPath);
+        }
+
+        // Step 2: Add 'main-' to the filename if it matches the provided filename
+        if (newFileName === filename) {
+          const newMainFile = `main-${newFileName}`;
+
+          // Rename the file on the filesystem
+          const oldPath = path.join(pathName, newFileName);
+          const newPath = path.join(pathName, newMainFile);
+          await fsPrmises.rename(oldPath, newPath);
+        }
+      }
+      product.images.image_main_url = `${imgUrlpath}/${filename}`;
+      const productUpdated = await product.save();
+      return productUpdated.images.image_main_url;
+    } catch (err) {
+      throw new createHttpError.InternalServerError(err);
+    }
   }
 
   async deleteProductService() {}

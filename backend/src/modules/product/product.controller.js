@@ -104,7 +104,26 @@ class ProductController {
   }
 
   async addImagesToProductController(req, res, next) {
+    const { slug } = req.body;
     try {
+      const images = await this.#services.addImagesToProductService(
+        req.files,
+        slug
+      );
+      return res.json({ message: "success", images });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async changeMainImageController(req, res, next) {
+    const { filename, slug } = req.body;
+    try {
+      const image_main_url = await this.#services.changeMainImageService(
+        filename,
+        slug
+      );
+      return res.json({ message: "success", image_main_url });
     } catch (err) {
       next(err);
     }

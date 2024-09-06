@@ -7,6 +7,13 @@
 
 /**
  * @swagger
+ *  tags:
+ *      -   name: Product Images
+ *          description:    all operations of Product Images is here, Notice(change main and upload add images needs first product created)
+ */
+
+/**
+ * @swagger
  *  components:
  *          schemas:
  *              updateProductImages:
@@ -25,7 +32,7 @@
  *      post:
  *          summary: Uploads product iamges to temporary folder
  *          tags:
- *              -   Product
+ *              -   Product Images
  *          requestBody:
  *                  content:
  *                      multipart/form-data:
@@ -43,7 +50,7 @@
  *      post:
  *          summary: Uploads product iamge main to temporary folder
  *          tags:
- *              -   Product
+ *              -   Product Images
  *          requestBody:
  *                  content:
  *                      multipart/form-data:
@@ -57,6 +64,69 @@
  *          responses:
  *                  200:
  *                      description: success!
+ */
+
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          addProductImages:
+ *                  type: object
+ *                  properties:
+ *                      slug:
+ *                          type: string
+ *                      images:
+ *                          type: array
+ *                          items:
+ *                              type: string
+ *                              format: binary
+ */
+
+/**
+ * @swagger
+ *  /product/upload-images-add:
+ *      post:
+ *          summary: upload and add images to existing product
+ *          tags:
+ *              -   Product Images
+ *          requestBody:
+ *              content:
+ *                  multipart/form-data:
+ *                      schema:
+ *                          $ref: "#/components/schemas/addProductImages"
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          ChangeMainImage:
+ *              type: object
+ *              properties:
+ *                  filename:
+ *                      type: string
+ *                  slug:
+ *                      type: string
+ */
+
+/**
+ * @swagger
+ *  /product/change-main-image:
+ *      post:
+ *          summary: change the primary image
+ *          tags:
+ *              -    Product Images
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: "#/components/schemas/ChangeMainImage"
+ *          responses:
+ *              200:
+ *                  description: success!
  */
 
 /**
