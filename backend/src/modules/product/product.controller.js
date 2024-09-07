@@ -130,13 +130,7 @@ class ProductController {
   }
 
   async deleteProductImagesController(req, res, next) {
-    const { productId, slug,filenames,images_url } = req.body;
-    // const filenames = Array.isArray(req.body.filenames)
-    //   ? req.body.filenames
-    //   : [req.body.filenames];
-    // const images_url = Array.isArray(req.body.images_url)
-    //   ? req.body.images_url
-    //   : [req.body.images_url];
+    const { productId, slug, filenames, images_url } = req.body;
     try {
       const product = await this.#services.deleteProductImagesService(
         productId,

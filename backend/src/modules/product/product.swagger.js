@@ -179,7 +179,7 @@
  *              -   Product Images
  *          requestBody:
  *              content:
- *                  application/x-www-form-urlencoded:
+ *                  application/json:
  *                          schema:
  *                              $ref: "#/components/schemas/deleteProductImages"
  *

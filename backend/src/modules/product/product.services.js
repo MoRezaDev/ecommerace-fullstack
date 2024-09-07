@@ -271,8 +271,6 @@ class ProductController {
   }
 
   async deleteProductImagesService(productId, filenames, images_url, slug) {
-    console.log(filenames)
-    console.log(images_url)
     const product = await this.checkExistsProduct(productId);
     if (!Array.isArray(filenames)) {
       throw new createHttpError.BadRequest("bad id array");
