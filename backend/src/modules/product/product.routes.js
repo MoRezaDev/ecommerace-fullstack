@@ -11,6 +11,10 @@ const {
   clearProductController,
   addImagesToProductController,
   changeMainImageController,
+  deleteMultipleProductsController,
+  deleteProductController,
+  getProductController,
+  deleteProductImagesController,
 } = require("./product.controller");
 
 const router = require("express").Router();
@@ -33,11 +37,16 @@ router.post(
   addImagesToProductController
 );
 
+router.delete('/delete-product-images',deleteProductImagesController)
+
 router.post("/change-main-image", changeMainImageController);
 
+router.post('/get-product',getProductController)
 router.post("/create", createProductController);
 router.put("/update-product", updateProductController);
 router.delete("/clear", clearProductController);
+router.delete("/delete-products", deleteMultipleProductsController);
+router.delete("/delete-product", deleteProductController);
 
 module.exports = {
   ProductRoutes: router,

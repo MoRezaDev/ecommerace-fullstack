@@ -16,4 +16,4 @@ yarn-error.log*
 *.sublime-workspace
 
 # Images
-src/public/
+public/

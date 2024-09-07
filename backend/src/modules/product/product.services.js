@@ -169,6 +169,7 @@ class ProductController {
 
   async updateProductService(product) {
     const { _id, name, slug, description, categoryId, specification } = product;
+    console.log(name);
     const productObj = await this.checkExistsProduct(_id);
     if (name) {
       productObj.name = name;
@@ -269,7 +270,83 @@ class ProductController {
     }
   }
 
-  async deleteProductService() {}
+  async deleteProductImagesService(productId, filenames, images_url, slug) {
+    console.log(filenames)
+    console.log(images_url)
+    const product = await this.checkExistsProduct(productId);
+    if (!Array.isArray(filenames)) {
+      throw new createHttpError.BadRequest("bad id array");
+    }
+
+    // delete files from server
+    const filePath = path.join(__dirname, "..", "..", "public", "product");
+
+    // Ensure all file deletions are awaited
+    await Promise.all(
+      filenames.map(async (file) => {
+        const fullPath = path.join(filePath, slug, file);
+        await fsPrmises.unlink(fullPath).catch((err) => {
+          console.error(`Error deleting file ${fullPath}:`, err);
+        });
+      })
+    );
+
+    product.images.images_url = product.images.images_url.filter(
+      (image) => !images_url.includes(image)
+    );
+    const result = await product.save();
+    return result;
+  }
+
+  async deleteProductService(productId) {
+    try {
+      const product = await this.checkExistsProduct(productId);
+
+      //delete directory
+      const productPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "public",
+        "product",
+        product.slug
+      );
+      await fsPrmises.rm(productPath, { recursive: true, force: true });
+      await product.deleteOne();
+    } catch (err) {
+      throw new createHttpError.InternalServerError(err);
+    }
+  }
+
+  async deleteMultipleProductsService(productIds, filenames, slug) {
+    if (
+      !Array.isArray(productIds) ||
+      !productIds ||
+      !Array.isArray(filenames)
+    ) {
+      throw new createHttpError.BadRequest("bad id array");
+    }
+
+    // delete files from server
+    const filePath = path.join(__dirname, "..", "..", "public", "product");
+
+    // Ensure all file deletions are awaited
+    await Promise.all(
+      filenames.map(async (file) => {
+        const fullPath = path.join(filePath, slug, file);
+        await fsPrmises.unlink(fullPath).catch((err) => {
+          console.error(`Error deleting file ${fullPath}:`, err);
+        });
+      })
+    );
+
+    // Delete products from the database
+    const result = await this.#productModel.deleteMany({
+      _id: { $in: productIds },
+    });
+
+    return result; // Consider returning this if needed
+  }
 
   async clearProductService() {
     await this.#productModel.deleteMany();

@@ -14,6 +14,26 @@
 
 /**
  * @swagger
+ *  /product/get-product:
+ *         post:
+ *              summary: get product details from id
+ *              tags:
+ *                  -   Product
+ *              requestBody:
+ *                  content:
+ *                      application/x-www-form-urlencoded:
+ *                              schema:
+ *                                  type: object
+ *                                  properties:
+ *                                      productId:
+ *                                          type: string
+ *              responses:
+ *                  200:
+ *                      description: success!
+ */
+
+/**
+ * @swagger
  *  components:
  *          schemas:
  *              updateProductImages:
@@ -131,6 +151,45 @@
 
 /**
  * @swagger
+ *  components:
+ *      schemas:
+ *          deleteProductImages:
+ *                  type: object
+ *                  properties:
+ *                      productId:
+ *                          type: string
+ *                      filenames:
+ *                          type: array
+ *                          items:
+ *                              type: string
+ *                      images_url:
+ *                          type: array
+ *                          items:
+ *                              type: string
+ *                      slug:
+ *                          type: string
+ */
+
+/**
+ * @swagger
+ *  /product/delete-product-images:
+ *      delete:
+ *          summary: delete images from specific product
+ *          tags:
+ *              -   Product Images
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              $ref: "#/components/schemas/deleteProductImages"
+ *
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     CreateProduct:
@@ -226,6 +285,49 @@
  *          summary: delete all Product Model Data
  *          tags:
  *              -   Product
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
+ *  /product/delete-products:
+ *      delete:
+ *          summary: Delete multiple products
+ *          tags:
+ *              -   Product
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  productsId:
+ *                                      type: array
+ *                                      items:
+ *                                          type: string
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
+ *  /product/delete-product:
+ *      delete:
+ *          summary: Delete specific product from productId
+ *          tags:
+ *              -   Product
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  productsId:
+ *                                      type: string
+ *
  *          responses:
  *              200:
  *                  description: success!

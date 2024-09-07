@@ -9,7 +9,7 @@ class ProductController {
     this.#services = productServices;
   }
 
-  async getProduct(req, res, next) {
+  async getProductController(req, res, next) {
     const { productId } = req.body;
     try {
       const product = await this.#services.getProductByIdServic(productId);
@@ -129,8 +129,45 @@ class ProductController {
     }
   }
 
-  async deleteProductController(req, res, next) {
+  async deleteProductImagesController(req, res, next) {
+    const { productId, slug,filenames,images_url } = req.body;
+    // const filenames = Array.isArray(req.body.filenames)
+    //   ? req.body.filenames
+    //   : [req.body.filenames];
+    // const images_url = Array.isArray(req.body.images_url)
+    //   ? req.body.images_url
+    //   : [req.body.images_url];
     try {
+      const product = await this.#services.deleteProductImagesService(
+        productId,
+        filenames,
+        images_url,
+        slug
+      );
+      return res.json({ message: "success!", product });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteProductController(req, res, next) {
+    const { productId } = req.body;
+    try {
+      await this.#services.deleteProductService(productId);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteMultipleProductsController(req, res, next) {
+    const { productIds, filenames, slug } = req.body;
+    try {
+      await this.#services.deleteMultipleProductsService(
+        productIds,
+        filenames,
+        slug
+      );
+      return res.json({ message: "success!" });
     } catch (err) {
       next(err);
     }
