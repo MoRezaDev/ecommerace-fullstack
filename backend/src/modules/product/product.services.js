@@ -28,6 +28,13 @@ class ProductController {
     return product;
   }
 
+  async getAllProductsService() {
+    const products = await this.#productModel.find();
+    if (!products) throw new createHttpError.NotFound("no products found");
+    console.log(products);
+    return products;
+  }
+
   async getProductByIdServic(productId) {
     const product = await this.checkExistsProduct(productId);
     const productObj = product.toObject();
@@ -65,54 +72,57 @@ class ProductController {
 
   async moveImagesToActualPlace(images, productSlug) {
     const mainImgFileName = images.image_main_url.slice(
-      images.image_main_url.lastIndexOf("/") + 1
+        images.image_main_url.lastIndexOf("/") + 1
     );
+
     let result = {
-      image_main_url: "",
-      images_url: [],
+        image_main_url: "",
+        images_url: [],
     };
-    let imagesFileName = [];
-    for (let img of images.images_url) {
-      imagesFileName.push(img.slice(img.lastIndexOf("/") + 1));
-    }
+
+    // Create a Set for quicker lookups
+    const imagesFileNameSet = new Set(images.images_url.map(img => img.slice(img.lastIndexOf("/") + 1)));
 
     const actualPath = path.join(__dirname, "..", "..", "public");
 
-    //check dir exists
-    if (!fs.existsSync(path.join(actualPath, productSlug))) {
-      await fsPrmises.mkdir(path.join(actualPath, "product", productSlug));
+    // Check if directory exists
+    if (!fs.existsSync(path.join(actualPath, "product", productSlug))) {
+        await fsPrmises.mkdir(path.join(actualPath, "product", productSlug));
     }
 
     try {
-      const files = await fsPrmises.readdir(
-        path.join(actualPath, "product-tmp")
-      );
-      for (const file of files) {
-        const existedMain = file === mainImgFileName;
-        const existedImages = imagesFileName.some((img) => {
-          return img === file;
-        });
+        const files = await fsPrmises.readdir(path.join(actualPath, "product-tmp"));
+        
+        for (const file of files) {
+            const isMainImage = file === mainImgFileName;
+            const isOtherImage = imagesFileNameSet.has(file);
 
-        if (existedMain) {
-          result.image_main_url = `http://localhost:5025/product/${productSlug}/${file}`;
+            if (isMainImage) {
+                result.image_main_url = `http://localhost:5025/product/${productSlug}/${file}`;
+                
+                // Move the main image file
+                const oldPath = path.join(actualPath, "product-tmp", file);
+                const newPath = path.join(actualPath, "product", productSlug, file);
+                await fsPrmises.rename(oldPath, newPath);
+            }
+
+            if (isOtherImage) {
+                result.images_url.push(`http://localhost:5025/product/${productSlug}/${file}`);
+
+                // Move other image files
+                const oldPath = path.join(actualPath, "product-tmp", file);
+                const newPath = path.join(actualPath, "product", productSlug, file);
+                await fsPrmises.rename(oldPath, newPath);
+            }
         }
-
-        if (existedImages) {
-          result.images_url.push(
-            `http://localhost:5025/product/${productSlug}/${file}`
-          );
-        }
-
-        //moving file
-        const oldPath = path.join(actualPath, "product-tmp", file);
-        const newPath = path.join(actualPath, "product", productSlug, file);
-        await fsPrmises.rename(oldPath, newPath);
-      }
-      return result;
+        
+        return result;
     } catch (err) {
-      throw new createHttpError.InternalServerError(err);
+        throw new createHttpError.InternalServerError(err);
     }
-  }
+}
+
+
 
   async createProductService(product) {
     const {

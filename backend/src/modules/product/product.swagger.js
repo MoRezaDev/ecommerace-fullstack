@@ -14,6 +14,18 @@
 
 /**
  * @swagger
+ * /product/get-all-products:
+ *      get:
+ *          summary: get all products
+ *          tags:
+ *              -   Product
+ *          responses:
+ *              200:
+ *                  description: success!
+ */
+
+/**
+ * @swagger
  *  /product/get-product:
  *         post:
  *              summary: get product details from id

@@ -9,6 +9,15 @@ class ProductController {
     this.#services = productServices;
   }
 
+  async getAllProductsController(req, res, next) {
+    try {
+      const products = await this.#services.getAllProductsService();
+      return res.json({ message: "success", products });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getProductController(req, res, next) {
     const { productId } = req.body;
     try {
