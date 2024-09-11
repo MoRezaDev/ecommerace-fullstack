@@ -13,15 +13,16 @@ const userSchema = new mongoose.Schema({
   address: { type: String },
   location: {
     latitude: { type: Number },
-    longitude: { type: Number},
+    longitude: { type: Number },
   },
   email: { type: String },
   password: { type: String },
-  history: [{ type: mongoose.Types.ObjectId, ref: "History" }],
+  orders: [{ type: mongoose.Types.ObjectId, ref: "History" }],
   img_url: { type: String },
   card: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   otp: otpSchema,
+  quantity: { type: Number, default: 0 },
 });
 
 const UserModel = mongoose.model("User", userSchema);
