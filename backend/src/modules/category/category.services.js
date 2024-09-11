@@ -1,7 +1,7 @@
 const autoBind = require("auto-bind");
 const CategoryModel = require("./category.model");
 const createHttpError = require("http-errors");
-
+const mongoose = require("mongoose");
 class CategoryServices {
   #categoryModel;
   constructor() {
@@ -21,8 +21,25 @@ class CategoryServices {
   }
 
   async getCategoryByIdService(categoryId) {
-    const category = await this.checkCategoryExists(categoryId);
-    return category.toObject();
+    // const category = await this.#categoryModel.findOne({ _id: categoryId })
+    const category = await CategoryModel.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(categoryId) },
+      },
+      {
+        $graphLookup: {
+          from: "categories", // MongoDB collection name
+          startWith: "$_id",
+          connectFromField: "_id",
+          connectToField: "parent",
+          as: "descendants",
+          depthField: "depth", // Optional: adds a field to indicate depth level
+        },
+      },
+    ]);
+
+    if (!category) throw new createHttpError.NotFound("no category found");
+    return category;
   }
 
   async getCategoryBySlugService(slug) {
