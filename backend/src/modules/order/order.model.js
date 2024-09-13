@@ -4,13 +4,14 @@ const transactionSchema = new mongoose.Schema(
   {
     number: { type: Number, required: true, unique: true, index: true },
     status: { type: String, enum: ["success", "failed"], required: true },
+    tracking_number: { type: Number, required: true, index: true, default: 0 },
   },
   { timestamps: true }
 );
 
 const orderSchema = new mongoose.Schema(
   {
-    number: { type: String, required: true, lowercase: true,index:true },
+    number: { type: String, required: true, lowercase: true, index: true },
     status: {
       type: String,
       enum: [
@@ -22,6 +23,8 @@ const orderSchema = new mongoose.Schema(
         "officer",
         "delivered",
       ],
+      index: true,
+      default: "waiting",
     },
     products: [
       { type: mongoose.Types.ObjectId, ref: "Product", required: true },
