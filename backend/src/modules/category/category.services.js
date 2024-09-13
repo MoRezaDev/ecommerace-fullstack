@@ -2,11 +2,15 @@ const autoBind = require("auto-bind");
 const CategoryModel = require("./category.model");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const { findCategoryBySlug } = require("../../helper/functions");
+const ProductModel = require("../product/product.model");
 class CategoryServices {
   #categoryModel;
+  #productModel;
   constructor() {
     autoBind(this);
     this.#categoryModel = CategoryModel;
+    this.#productModel = ProductModel;
   }
 
   async checkCategoryExists(categoryId) {
@@ -16,36 +20,88 @@ class CategoryServices {
   }
 
   async getAllCategoriesService() {
-    const cateogires = await this.#categoryModel.find();
+    const cateogires = await this.#categoryModel.find({
+      parent: { $exists: false },
+    });
     return cateogires;
   }
 
   async getCategoryByIdService(categoryId) {
-    // const category = await this.#categoryModel.findOne({ _id: categoryId })
-    const category = await CategoryModel.aggregate([
-      {
-        $match: { _id: new mongoose.Types.ObjectId(categoryId) },
-      },
-      {
-        $graphLookup: {
-          from: "categories", // MongoDB collection name
-          startWith: "$_id",
-          connectFromField: "_id",
-          connectToField: "parent",
-          as: "descendants",
-          depthField: "depth", // Optional: adds a field to indicate depth level
-        },
-      },
-    ]);
+    const category = await this.#categoryModel.findOne({ _id: categoryId });
 
     if (!category) throw new createHttpError.NotFound("no category found");
     return category;
   }
 
   async getCategoryBySlugService(slug) {
-    const category = await this.#categoryModel.findOne({ slug });
-    if (!category) throw new createHttpError.NotFound("no category found");
-    return category.toObject();
+    const cateogires = await this.#categoryModel.find({
+      parent: { $exists: false },
+    });
+
+    const category = findCategoryBySlug(cateogires, slug);
+    return category;
+  }
+
+  async getProductsByCategorySlugService(params, slug) {
+    //checking category
+    const pathParams = params[0].toLowerCase().split("/").filter(Boolean);
+
+    let finalSlug = slug;
+    let currentCategory = await this.#categoryModel.findOne({
+      slug: slug,
+      parent: { $exists: false },
+    });
+
+    if (!currentCategory)
+      throw new createHttpError.NotFound("no category found!");
+
+    if (pathParams) {
+      for (const s of pathParams) {
+        currentCategory = currentCategory.children.find(
+          (child) => child.slug === s
+        );
+        if (!currentCategory)
+          throw new createHttpError.NotFound("subcategory is invalid");
+        finalSlug = currentCategory.slug;
+      }
+    }
+    const products = await this.#productModel.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categories",
+        },
+      },
+      {
+        $addFields: { parentss: "$categories.parents" },
+      },
+      { $unwind: "$parentss" },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "parentss",
+          foreignField: "_id",
+          as: "parents",
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { "categories.slug": finalSlug },
+            { "parents.slug": finalSlug },
+          ],
+        },
+      },
+      {
+        $project: {
+          parents: 0,
+          parentss: 0,
+        },
+      },
+    ]);
+    return products;
   }
 
   async createCategoryService(categoryObj) {
@@ -79,6 +135,20 @@ class CategoryServices {
     } catch (err) {
       throw new createHttpError.InternalServerError(err);
     }
+  }
+
+  async updateCategoryService(categoryId, categoryDto) {
+    const category = await this.checkCategoryExists(categoryId);
+    if (!categoryDto.name)
+      throw new createHttpError.BadRequest("name field is missing");
+
+    if (categoryDto.name) {
+      category.name = categoryDto.name;
+      category.slug = categoryDto.name.replace(/ /g, "-").toLowerCase();
+    }
+
+    const updatedCategory = await category.save();
+    return updatedCategory;
   }
 
   async deleteAllCategoriesService() {

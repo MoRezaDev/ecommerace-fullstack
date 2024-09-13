@@ -31,7 +31,6 @@ class ProductController {
   async getAllProductsService() {
     const products = await this.#productModel.find();
     if (!products) throw new createHttpError.NotFound("no products found");
-    console.log(products);
     return products;
   }
 
@@ -42,12 +41,10 @@ class ProductController {
   }
 
   async getProductBySlugService(slug) {
-    const product = await this.checkExistsProduct(slug);
+    const product = await this.checkExistsProductBySlug(slug);
     const productObj = product.toObject();
     return productObj;
   }
-
-  async getProductsByCategoryService() {}
 
   async uploadProductImageMainService(file) {
     if (!file)
@@ -72,57 +69,61 @@ class ProductController {
 
   async moveImagesToActualPlace(images, productSlug) {
     const mainImgFileName = images.image_main_url.slice(
-        images.image_main_url.lastIndexOf("/") + 1
+      images.image_main_url.lastIndexOf("/") + 1
     );
 
     let result = {
-        image_main_url: "",
-        images_url: [],
+      image_main_url: "",
+      images_url: [],
     };
 
     // Create a Set for quicker lookups
-    const imagesFileNameSet = new Set(images.images_url.map(img => img.slice(img.lastIndexOf("/") + 1)));
+    const imagesFileNameSet = new Set(
+      images.images_url.map((img) => img.slice(img.lastIndexOf("/") + 1))
+    );
 
     const actualPath = path.join(__dirname, "..", "..", "public");
 
     // Check if directory exists
     if (!fs.existsSync(path.join(actualPath, "product", productSlug))) {
-        await fsPrmises.mkdir(path.join(actualPath, "product", productSlug));
+      await fsPrmises.mkdir(path.join(actualPath, "product", productSlug));
     }
 
     try {
-        const files = await fsPrmises.readdir(path.join(actualPath, "product-tmp"));
-        
-        for (const file of files) {
-            const isMainImage = file === mainImgFileName;
-            const isOtherImage = imagesFileNameSet.has(file);
+      const files = await fsPrmises.readdir(
+        path.join(actualPath, "product-tmp")
+      );
 
-            if (isMainImage) {
-                result.image_main_url = `http://localhost:5025/product/${productSlug}/${file}`;
-                
-                // Move the main image file
-                const oldPath = path.join(actualPath, "product-tmp", file);
-                const newPath = path.join(actualPath, "product", productSlug, file);
-                await fsPrmises.rename(oldPath, newPath);
-            }
+      for (const file of files) {
+        const isMainImage = file === mainImgFileName;
+        const isOtherImage = imagesFileNameSet.has(file);
 
-            if (isOtherImage) {
-                result.images_url.push(`http://localhost:5025/product/${productSlug}/${file}`);
+        if (isMainImage) {
+          result.image_main_url = `http://localhost:5025/product/${productSlug}/${file}`;
 
-                // Move other image files
-                const oldPath = path.join(actualPath, "product-tmp", file);
-                const newPath = path.join(actualPath, "product", productSlug, file);
-                await fsPrmises.rename(oldPath, newPath);
-            }
+          // Move the main image file
+          const oldPath = path.join(actualPath, "product-tmp", file);
+          const newPath = path.join(actualPath, "product", productSlug, file);
+          await fsPrmises.rename(oldPath, newPath);
         }
-        
-        return result;
+
+        if (isOtherImage) {
+          result.images_url.push(
+            `http://localhost:5025/product/${productSlug}/${file}`
+          );
+
+          // Move other image files
+          const oldPath = path.join(actualPath, "product-tmp", file);
+          const newPath = path.join(actualPath, "product", productSlug, file);
+          await fsPrmises.rename(oldPath, newPath);
+        }
+      }
+
+      return result;
     } catch (err) {
-        throw new createHttpError.InternalServerError(err);
+      throw new createHttpError.InternalServerError(err);
     }
-}
-
-
+  }
 
   async createProductService(product) {
     const {

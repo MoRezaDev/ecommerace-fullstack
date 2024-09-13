@@ -27,6 +27,8 @@ async function main() {
   app.use(MainRouter);
   swaggerConfig(app);
 
+  
+
   allExceptionHandllers(app);
 
   mongoose.connection.once("open", () => {
@@ -39,5 +41,3 @@ async function main() {
 }
 
 main();
-
-

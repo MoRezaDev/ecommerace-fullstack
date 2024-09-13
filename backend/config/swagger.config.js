@@ -13,8 +13,13 @@ const swaggerConfig = (app) => {
     },
     apis: [path.join(__dirname, "../src/modules/**/*.swagger.js")],
   });
-  console.log(`Current directory: ${process.cwd()}`);
-  app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  app.use(
+    "/swagger",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDoc, {
+      swaggerOptions: { defaultModelsExpandDepth: 0 },
+    })
+  );
 };
 
 module.exports = swaggerConfig;

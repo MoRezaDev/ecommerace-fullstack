@@ -29,18 +29,13 @@ class ProductController {
   }
 
   async getProductBySlugController(req, res, next) {
-    const { slug } = req.body;
+    const { slug } = req.params;
 
     try {
-      const product = await this.#services.getProductBySlugService(slug);
+      const product = await this.#services.getProductBySlugService(
+        slug.toLowerCase()
+      );
       return res.json({ message: "success", product });
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async getProductsByCategoryController(req, res, next) {
-    try {
     } catch (err) {
       next(err);
     }
@@ -81,7 +76,7 @@ class ProductController {
     try {
       const newProduct = await this.#services.createProductService({
         name,
-        slug,
+        slug: slug.toLowerCase(),
         title,
         description,
         categoryId,
@@ -101,7 +96,7 @@ class ProductController {
       const product = await this.#services.updateProductService({
         _id,
         name,
-        slug,
+        slug:slug.toLowerCase(),
         description,
         categoryId,
         specification,

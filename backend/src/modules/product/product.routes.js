@@ -16,6 +16,7 @@ const {
   getProductController,
   deleteProductImagesController,
   getAllProductsController,
+  getProductBySlugController,
 } = require("./product.controller");
 
 const router = require("express").Router();
@@ -43,6 +44,7 @@ router.delete("/delete-product-images", deleteProductImagesController);
 router.post("/change-main-image", changeMainImageController);
 
 router.get("/get-all-products", getAllProductsController);
+router.get("/:slug", getProductBySlugController);
 router.post("/get-product", getProductController);
 router.post("/create", createProductController);
 router.put("/update-product", updateProductController);

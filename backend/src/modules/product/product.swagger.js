@@ -26,6 +26,23 @@
 
 /**
  * @swagger
+ *  /product/{slug}:
+ *      get:
+ *          summary: Get product from slug to front-end
+ *          tags:
+ *              -   Product
+ *          parameters:
+ *              -   in: path
+ *                  name: slug
+ *                  schema:
+ *                      type: string
+ *          responses:
+ *              200:
+ *                  description:  success!
+ */
+
+/**
+ * @swagger
  *  /product/get-product:
  *         post:
  *              summary: get product details from id

@@ -129,3 +129,54 @@
  *                  200:
  *                      description: success
  */
+
+/**
+ * @swagger
+ *  /category/update:
+ *      put:
+ *          summary: update Category name
+ *          tags:
+ *              -   Category
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  categoryId:
+ *                                      type: string
+ *                                  name:
+ *                                      type: string
+ *                              required:
+ *                                  -   categoryId
+ *                                  -   name
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+
+/**
+ * @swagger
+ *  /category/{slug}/{rest}:
+ *      get:
+ *          summary: get products by category slug(Swagger has bug for dynamic params in /,this feature not working in swagger but it working correctly)
+ *          tags:
+ *              -   Category
+ *          parameters:
+ *              - in: path
+ *                name: slug
+ *                required: true
+ *                schema:
+ *                  type: string
+ *              - in: path
+ *                name: rest
+ *                required: false
+ *                schema:
+ *                  type: string
+ *
+ *
+ *
+ *          responses:
+ *              200:
+ *                  description: success
+ */

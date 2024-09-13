@@ -31,8 +31,24 @@ class CategoryController {
     const { slug } = req.body;
 
     try {
-      const category = await this.#services.getCategoryBySlugService(slug);
+      const category = await this.#services.getCategoryBySlugService(
+        slug.toLowerCase()
+      );
       return res.json({ category });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getProductsByCategorySlugController(req, res, next) {
+    const slug = req.params.slug.toLowerCase();
+    const params = req.params;
+    try {
+      const products = await this.#services.getProductsByCategorySlugService(
+        params,
+        slug
+      );
+      return res.json({ message: "success", products });
     } catch (err) {
       next(err);
     }
@@ -52,6 +68,18 @@ class CategoryController {
     }
   }
 
+  async updateCategoryController(req, res, next) {
+    const { categoryId, name } = req.body;
+    try {
+      const updatedCategory = await this.#services.updateCategoryService(
+        categoryId,
+        { name }
+      );
+      return res.json({ message: "success", category: updatedCategory });
+    } catch (err) {
+      next(err);
+    }
+  }
   async deleteAllCategoriesController(req, res, next) {
     try {
       await this.#services.deleteAllCategoriesService();
