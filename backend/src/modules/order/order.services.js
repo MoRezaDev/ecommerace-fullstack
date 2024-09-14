@@ -51,6 +51,7 @@ class OrderServices {
       address,
       deliver_date,
       number: `dkc-${randomInt(100000, 999999)}`,
+      user: userId,
     });
 
     if (location) {
@@ -64,7 +65,7 @@ class OrderServices {
 
   async updateOrderService(orderId, orderDto) {
     const order = await this.checkOrderExists(orderId);
-    const { address, deliver_date, location, status } = orderDto;
+    const { address, deliver_date, location } = orderDto;
     if (address) {
       order.address = address;
     }
@@ -75,10 +76,6 @@ class OrderServices {
 
     if (location) {
       order.location = location;
-    }
-
-    if (status) {
-      order.status = status;
     }
 
     const result = await order.save();
@@ -121,6 +118,37 @@ class OrderServices {
       order.transactions[order.transactions.length - 1];
 
     return createdTransaction;
+  }
+
+  //Admin Services
+  async updateOrderStatusService(orderId, status) {
+    const order = await this.checkOrderExists(orderId);
+    if (!status) throw new createHttpError.BadRequest("invalid status");
+    order.status = status;
+    const result = await order.save();
+    return result;
+  }
+
+  async getAllProcessingOrdersService() {
+    const orders = await this.#orderModel.find({
+      status: { $ne: "delivered" },
+      status: { $ne: "waiting" },
+    });
+
+    return orders;
+  }
+
+  async getOrderService(orderNumber) {
+    const order = await this.#orderModel
+      .findOne({ number: orderNumber })
+      .exec();
+    if (!order) throw new createHttpError.NotFound("no order found!");
+    return order.toObject();
+  }
+
+  async deleteOrderService(orderId) {
+    const order = await this.checkOrderExists(orderId);
+    await order.deleteOne();
   }
 }
 

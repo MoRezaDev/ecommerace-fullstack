@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
   card: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   otp: otpSchema,
-  quantity: { type: Number, default: 0 },
 });
 
 const UserModel = mongoose.model("User", userSchema);

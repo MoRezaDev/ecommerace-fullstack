@@ -12,6 +12,12 @@ const transactionSchema = new mongoose.Schema(
 const orderSchema = new mongoose.Schema(
   {
     number: { type: String, required: true, lowercase: true, index: true },
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      index: true,
+      required: true,
+    },
     status: {
       type: String,
       enum: [
@@ -42,7 +48,12 @@ const orderSchema = new mongoose.Schema(
 
 const OrderModel = mongoose.model("Order", orderSchema);
 
-module.exports = OrderModel;
+orderSchema.pre("findOne", function (next) {
+  this.populate({
+    path: "user",
+    select: "_id mobile role name family address location email img_url",
+  });
+});
 
 transactionSchema.pre("save", async function (next) {
   const transaction = this;
@@ -67,3 +78,5 @@ transactionSchema.pre("save", async function (next) {
 
   next();
 });
+
+module.exports = OrderModel;

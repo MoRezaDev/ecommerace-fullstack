@@ -50,13 +50,12 @@ class OrderController {
 
   async updateOrderController(req, res, next) {
     const userId = req.userId;
-    const { address, deliver_date, location, status } = req.body;
+    const { address, deliver_date, location } = req.body;
     try {
       const order = await this.#services.updateOrderService(userId, {
         address,
         deliver_date,
         location,
-        status,
       });
       return res.json({ message: "success", order });
     } catch (err) {
@@ -72,6 +71,49 @@ class OrderController {
         { status, tracking_number }
       );
       return res.json({ message: "success", transaction });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  //Admin Controllers
+  async updateOrderStatusController(req, res, next) {
+    const { orderId, status } = req.body;
+    try {
+      const order = await this.#services.updateOrderStatusService(
+        orderId,
+        status
+      );
+      return res.json({ message: "success", order });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getAllProcessingOrdersController(req, res, next) {
+    try {
+      const orders = await this.#services.getAllProcessingOrdersService();
+      return res.json({ message: "success", orders });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getOrderController(req, res, next) {
+    const { orderNumber } = req.body;
+    try {
+      const order = await this.#services.getOrderService(orderNumber);
+      return res.json({ message: "success", order });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteOrderController(req, res, next) {
+    const { orderId } = req.body;
+    try {
+      await this.#services.deleteOrderService(orderId);
+      return res.json({ message: "ok" });
     } catch (err) {
       next(err);
     }
