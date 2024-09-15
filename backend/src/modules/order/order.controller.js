@@ -49,10 +49,9 @@ class OrderController {
   }
 
   async updateOrderController(req, res, next) {
-    const userId = req.userId;
-    const { address, deliver_date, location } = req.body;
+    const { address, deliver_date, location, orderId } = req.body;
     try {
-      const order = await this.#services.updateOrderService(userId, {
+      const order = await this.#services.updateOrderService(orderId, {
         address,
         deliver_date,
         location,
@@ -77,6 +76,16 @@ class OrderController {
   }
 
   //Admin Controllers
+  async getUserOrdersByIdController(req, res, next) {
+    const { userId } = req.body;
+    try {
+      const orders = await this.#services.getUserOrdersService(userId);
+      return res.json({ message: "success", orders });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async updateOrderStatusController(req, res, next) {
     const { orderId, status } = req.body;
     try {

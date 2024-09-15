@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   email: { type: String },
   password: { type: String },
-  orders: [{ type: mongoose.Types.ObjectId, ref: "History" }],
+  orders: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
   img_url: { type: String },
   card: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],

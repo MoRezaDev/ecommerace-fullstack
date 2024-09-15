@@ -2,7 +2,13 @@ const mongoose = require("mongoose");
 const { randomInt } = require("crypto");
 const transactionSchema = new mongoose.Schema(
   {
-    number: { type: Number, required: true, unique: true, index: true },
+    number: {
+      type: Number,
+      required: true,
+      unique: true,
+      index: true,
+      default: () => randomInt(1000000, 9999999),
+    },
     status: { type: String, enum: ["success", "failed"], required: true },
     tracking_number: { type: Number, required: true, index: true, default: 0 },
   },
