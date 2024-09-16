@@ -10,8 +10,12 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
-    quotes: [{ type: mongoose.Types.ObjectId, ref: "Comment", index: true }],
+    parent: { type: mongoose.Types.ObjectId, ref: "Comment", index: true },
     product: { type: mongoose.Types.ObjectId, ref: "Product", index: true },
   },
   { timestamps: true }
 );
+
+const CommentModel = mongoose.model("Comment", commentSchema);
+
+module.exports = CommentModel;

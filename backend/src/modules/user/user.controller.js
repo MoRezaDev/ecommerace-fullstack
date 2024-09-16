@@ -72,6 +72,38 @@ class UserController {
       next(err);
     }
   }
+
+  async createUserController(req, res, next) {
+    const { name, email, mobile, role, password } = req.body;
+    try {
+      const user = await this.#services.createUser({
+        name,
+        email,
+        mobile,
+        role,
+        password,
+      });
+      return res.json({ message: "success", user });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateUserFromAdminController(req, res, next) {
+    const { name, email, role, password, userId } = req.body;
+    try {
+      const user = await this.#services.updateUserFromAdmin({
+        name,
+        email,
+        role,
+        password,
+        userId,
+      });
+      return res.json({ message: "success", user });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new UserController();

@@ -120,6 +120,44 @@ class UserServices {
       throw new createHttpError.InternalServerError(err);
     }
   }
+
+  async createUser(userDto) {
+    const {
+      mobile = 0,
+      role = "user",
+      name = "test",
+      email = "test@test.com",
+      password = "123456",
+    } = userDto;
+    const newUser = await this.#userModel.create({
+      mobile,
+      role,
+      name,
+      email,
+      password,
+    });
+    return newUser.toObject();
+  }
+
+  async updateUserFromAdmin(userDto) {
+    const { name, email, role, password, userId } = userDto;
+    const user = await this.#userModel.findById(userId);
+
+    if (name) {
+      user.name = name;
+    }
+    if (password) {
+      user.password = password;
+    }
+    if (role) {
+      user.role = role;
+    }
+    if (email) {
+      user.email = email;
+    }
+    const result = await user.save();
+    return result;
+  }
 }
 
 module.exports = new UserServices();

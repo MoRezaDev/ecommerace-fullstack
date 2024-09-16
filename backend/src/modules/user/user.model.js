@@ -7,6 +7,7 @@ const otpSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   mobile: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   role: { type: String, default: "user", required: true },
   name: { type: String },
   family: { type: String },
