@@ -21,6 +21,14 @@ class ProductController {
     return product;
   }
 
+  async checkProductQuantity(productId) {
+    const product = await this.checkExistsProduct(productId);
+    if (product.quantity === 0)
+      throw new createHttpError.Forbidden(
+        "there is no quantity for this product,please charge it"
+      );
+  }
+
   async checkExistsProductBySlug(slug) {
     const product = await this.#productModel.findOne({ slug: slug });
 

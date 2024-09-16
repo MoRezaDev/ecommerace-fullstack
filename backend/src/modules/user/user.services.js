@@ -3,12 +3,15 @@ const UserModel = require("./user.model");
 const createHttpError = require("http-errors");
 const path = require("path");
 const fs = require("fs");
+const productServices = require("../product/product.services");
 
 class UserServices {
   #userModel;
+  #productServices;
   constructor() {
     autoBind(this);
     this.#userModel = UserModel;
+    this.#productServices = productServices;
   }
 
   async checkUserExists(credential) {
@@ -108,7 +111,7 @@ class UserServices {
     return newUserObj;
   }
 
-  async updateUserCard() {}
+  async addToCardUser(userId, productId) {}
 
   //for Admin access
   async deleteUser(userId) {
