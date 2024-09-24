@@ -29,6 +29,14 @@ class ProductController {
       );
   }
 
+  async allowProductQuantity(productId, quantity) {
+    const product = await this.checkExistsProduct(productId);
+    if (product.quantity < quantity) {
+      throw new createHttpError.Forbidden(`quantity is more than `);
+    }
+    return true;
+  }
+
   async checkExistsProductBySlug(slug) {
     const product = await this.#productModel.findOne({ slug: slug });
 

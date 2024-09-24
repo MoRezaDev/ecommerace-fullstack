@@ -1,17 +1,19 @@
 const autoBind = require("auto-bind");
 const UserModel = require("./user.model");
 const createHttpError = require("http-errors");
-const path = require("path");
 const fs = require("fs");
 const productServices = require("../product/product.services");
+const cartServices = require("../cart/cart.services");
 
 class UserServices {
   #userModel;
   #productServices;
+  #cartServices;
   constructor() {
     autoBind(this);
     this.#userModel = UserModel;
     this.#productServices = productServices;
+    this.#cartServices = cartServices;
   }
 
   async checkUserExists(credential) {
@@ -139,6 +141,9 @@ class UserServices {
       email,
       password,
     });
+    const cart = await this.#cartServices.createCart(newUser._id);
+    newUser.cart = cart;
+    await newUser.save();
     return newUser.toObject();
   }
 

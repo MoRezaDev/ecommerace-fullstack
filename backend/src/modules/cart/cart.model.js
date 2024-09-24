@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // Cart Item Schema
-const cartItemsSchema = new Schema({
+const cartItemsSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product", // Reference to Product model
@@ -10,7 +10,6 @@ const cartItemsSchema = new Schema({
   quantity: {
     type: Number,
     default: 1,
-    min: 1,
   },
   price: {
     type: Number,
@@ -20,13 +19,13 @@ const cartItemsSchema = new Schema({
 });
 
 // Cart Schema
-const cartSchema = new Schema({
+const cartSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User", // Reference to User model
     required: true,
   },
-  cart_items: [cartItemsSchema], // Embed the CartItem schema
+  cart_items: { type: [cartItemsSchema], required: true, default: 0 }, // Embed the CartItem schema
   total_price: {
     type: Number,
     required: true,
@@ -53,4 +52,6 @@ cartSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("Cart", cartSchema);
+const CartModel = mongoose.model("Cart", cartSchema);
+
+module.exports = CartModel;
