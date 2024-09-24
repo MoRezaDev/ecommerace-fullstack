@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   orders: [{ type: mongoose.Types.ObjectId, ref: "Order" }],
   img_url: { type: String },
-  card: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
+  cart: [{ type: mongoose.Types.ObjectId, ref: "Cart" }],
   comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   otp: otpSchema,
 });
