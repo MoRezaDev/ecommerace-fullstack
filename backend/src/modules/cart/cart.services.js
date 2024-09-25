@@ -34,11 +34,10 @@ class CartServices {
     cart.cart_items.push({ product: productId, quantity: 1 });
     await cart.save();
 
-    await cart.populate("product");
     return cart;
   }
 
-  //includes add or remove quantity
+  //increase or decrease quantity handled in frontend, it just update the cart item quantity
   async updateCartQuantity(cartId, cartItemId, quantity) {
     if (!quantity || quantity === 0)
       throw new createHttpError.BadRequest("invalid quantity");
@@ -47,14 +46,13 @@ class CartServices {
 
     // Find the cart item
     const item = cart.cart_items.id(cartItemId); // Mongoose helper to find sub-document by _id
-
     if (!item)
       throw new createHttpError.Forbidden(
         "Error in finding item in cart items"
       );
 
     const allowProductQuantity =
-      await this.#productServices.allowProductQuantity(item._id, quantity);
+      await this.#productServices.allowProductQuantity(item.product, quantity);
 
     // Update the quantity
     if (allowProductQuantity) {
@@ -64,10 +62,10 @@ class CartServices {
     // Save the updated cart
     await cart.save();
 
-    await cart.populate("product");
     return cart;
   }
 
+  //removes the specific item in the card_items
   async removeCartItem(cartId, productId) {
     const cart = await this.checkExistsCart(cartId);
 
@@ -76,7 +74,13 @@ class CartServices {
     );
     cart.cart_items = filteredCartItems;
     await cart.save();
-    await cart.populate("product");
+    return cart;
+  }
+
+  async removeAllItems(cartId) {
+    const cart = await this.checkExistsCart(cartId);
+    cart.cart_items = [];
+    await cart.save();
     return cart;
   }
 }

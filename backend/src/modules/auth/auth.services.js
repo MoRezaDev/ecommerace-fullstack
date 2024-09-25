@@ -3,12 +3,15 @@ const UserModel = require("../user/user.model");
 const createHttpError = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { randomInt } = require("crypto");
+const cartServices = require("../cart/cart.services");
 
 class AuthServices {
   #userModel;
+  #cartServices;
   constructor() {
     autoBind(this);
     this.#userModel = UserModel;
+    this.#cartServices = cartServices;
   }
 
   async checkUserExists(credential) {
@@ -49,8 +52,11 @@ class AuthServices {
   async sendOTP(mobile) {
     const verifiedMobile = this.verifyMobileRegex(mobile);
     let user = await this.#userModel.findOne({ mobile: verifiedMobile });
+    let cart;
     if (!user) {
       user = await this.#userModel.create({ mobile: verifiedMobile });
+      cart = await this.#cartServices.createCart(user._id);
+      user.cart = cart._id;
     }
 
     //check otp requests

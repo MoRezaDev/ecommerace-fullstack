@@ -14,6 +14,7 @@ const cartItemsSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    default: 0,
   },
   discount: { type: Number, required: true, default: 0 },
 });
@@ -21,11 +22,11 @@ const cartItemsSchema = new mongoose.Schema({
 // Cart Schema
 const cartSchema = new mongoose.Schema({
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User", // Reference to User model
     required: true,
   },
-  cart_items: { type: [cartItemsSchema], required: true, default: 0 }, // Embed the CartItem schema
+  cart_items: { type: [cartItemsSchema], required: true, default: [] }, // Embed the CartItem schema
   total_price: {
     type: Number,
     required: true,
