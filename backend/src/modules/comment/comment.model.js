@@ -10,7 +10,6 @@ const commentSchema = new mongoose.Schema(
       required: true,
     },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
-    parent: { type: mongoose.Types.ObjectId, ref: "Comment", index: true },
     product: { type: mongoose.Types.ObjectId, ref: "Product", index: true },
   },
   { timestamps: true }
