@@ -96,7 +96,7 @@ class ProductController {
       const product = await this.#services.updateProductService({
         _id,
         name,
-        slug:slug.toLowerCase(),
+        slug: slug.toLowerCase(),
         description,
         categoryId,
         specification,
@@ -175,6 +175,20 @@ class ProductController {
     try {
       await this.#services.clearProductService();
       return res.json({ message: "success" });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  //for Admin
+  async addProductQuantityController(req, res, next) {
+    const { productId, quantity } = req.body;
+    try {
+      const product = await this.#services.addProductQuantityService(
+        productId,
+        quantity
+      );
+      return res.json({ message: "success", product });
     } catch (err) {
       next(err);
     }

@@ -78,7 +78,7 @@
  *                  properties:
  *                      cartId:
  *                          type: string
- *                      productId:
+ *                      cartItemId:
  *                          type: string
  *
  */

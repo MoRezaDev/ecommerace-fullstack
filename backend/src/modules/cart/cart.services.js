@@ -66,11 +66,11 @@ class CartServices {
   }
 
   //removes the specific item in the card_items
-  async removeCartItem(cartId, productId) {
+  async removeCartItem(cartId, cartItemId) {
     const cart = await this.checkExistsCart(cartId);
 
     const filteredCartItems = cart.cart_items.filter(
-      (cartItem) => cartItem.product.toString() !== productId
+      (cartItem) => cartItem._id.toString() !== cartItemId
     );
     cart.cart_items = filteredCartItems;
     await cart.save();

@@ -32,7 +32,7 @@ class ProductController {
   async allowProductQuantity(productId, quantity) {
     const product = await this.checkExistsProduct(productId);
     if (product.quantity < quantity) {
-      throw new createHttpError.Forbidden(`quantity is more than `);
+      throw new createHttpError.Forbidden(`quantity is not avilable`);
     }
     return true;
   }
@@ -375,6 +375,17 @@ class ProductController {
 
   async clearProductService() {
     await this.#productModel.deleteMany();
+  }
+
+  //for Admin
+  async addProductQuantityService(productId, quantity) {
+    // if (quantity < 0 || typeof quantity !== "number" || isNaN(quantity))
+    //   throw new createHttpError.BadRequest("invalid quantity");
+
+    const product = await this.checkExistsProduct(productId);
+    product.quantity = quantity;
+    await product.save();
+    return product;
   }
 }
 

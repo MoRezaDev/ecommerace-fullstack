@@ -361,3 +361,25 @@
  *              200:
  *                  description: success!
  */
+
+/**
+ * @swagger
+ *  /product/add-product-quantity:
+ *      post:
+ *          summary: Add quantity to product
+ *          tags:
+ *              -   Product
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              productId:
+ *                                  type: string
+ *                              quantity:
+ *                                  type: number
+ *          responses:
+ *              200:      
+ *                  description: success!
+ */
