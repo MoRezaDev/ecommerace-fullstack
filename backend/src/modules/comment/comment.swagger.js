@@ -42,7 +42,7 @@
  *          editStatusComment:
  *              type: object
  *              properties:
- *                  productId:
+ *                  commentId:
  *                      type: string
  *                  status:
  *                      type: string
