@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "yekan-medium";
+  src: url("../../public/fonts/IRANYekanX-Medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "yekan-light";
+  src: url("../../public/fonts/IRANYekanX-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: "yekan-bold";
+  src: url("../../public/fonts/IRANYekanX-Bold.woff") format("woff");
+}
+
+body {
+  font-family: "yekan-light";
+}
+
+.navlink {
+  @apply flex items-center gap-2 p-2 rounded hover:bg-gray-500/30 transition;
+}
+
+.navlink-active {
+  @apply flex items-center gap-2 bg-[var(--active-bg)] p-2 rounded shadow-white;
+}
+
+.dark-mode {
+  @apply dark:bg-[var(--sidebar-bg)] dark:text-white;
+}
