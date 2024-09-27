@@ -5,6 +5,8 @@ import Product from "./pages/Product";
 import Users from "./pages/Users";
 import Category from "./pages/Category";
 import Dashboard from "./pages/Dashboard";
+import AddProduct from "./pages/AddProduct";
+import EditProduct from "./pages/EditProduct";
 
 const redirectIfLoggedInLoader = async () => {
   const isAuthenthicated = true;
@@ -47,6 +49,14 @@ export const router = createBrowserRouter([
       {
         path: "product",
         element: <Product />,
+      },
+      {
+        path: "product/add",
+        element: <AddProduct />,
+      },
+      {
+        path: "product/edit",
+        element: <EditProduct />,
       },
       {
         path: "users",

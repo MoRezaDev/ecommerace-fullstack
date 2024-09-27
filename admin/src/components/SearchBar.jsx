@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 
 function SearchBar() {
   return (
-    <div className="bg-slate-200 rounded-md p-2 flex items-center gap-4 text-md w-[300px]">
+    <div className="bg-slate-200 dark:bg-slate-700 transition-all duration-300 rounded-md p-2 flex items-center gap-4 text-md w-[300px]">
       <FaSearch className="text-gray-500" />
       <input
         className="bg-transparent outline-none"

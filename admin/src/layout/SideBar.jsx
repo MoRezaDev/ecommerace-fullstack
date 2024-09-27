@@ -45,7 +45,7 @@ function SideBar() {
           </div>
           {/* Submenu with smoother transition */}
           <ul
-            className={`transition-all  duration-500 ease-in-out overflow-hidden text-xs  ${
+            className={`transition-all  duration-500 ease-in-out overflow-hidden text-xs   ${
               isProductOpen ? "h-40 opacity-100 mt-2 " : "h-0 opacity-0"
             }`}
           >
@@ -53,7 +53,7 @@ function SideBar() {
               <NavLink
                 to="/admin/product/add"
                 className={({ isActive }) =>
-                  isActive ? "navlink-active" : "navlink mr-2"
+                  isActive ? "navlink-active mr-2" : "navlink mr-2"
                 }
               >
                 <FaSortUp />
@@ -64,7 +64,7 @@ function SideBar() {
               <NavLink
                 to="/admin/product/edit"
                 className={({ isActive }) =>
-                  isActive ? "navlink-active" : "navlink mr-2"
+                  isActive ? "navlink-active mr-2" : "navlink mr-2"
                 }
               >
                 <FaSortUp />

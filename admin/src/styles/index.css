@@ -32,3 +32,7 @@ body {
 .dark-mode {
   @apply dark:bg-[var(--sidebar-bg)] dark:text-white;
 }
+
+.pages-container {
+  @apply dark-mode transition duration-200 h-[calc(100%-80px)] dark:border-r p-4 
+}
