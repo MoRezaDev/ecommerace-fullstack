@@ -73,10 +73,13 @@ class ProductController {
       specification,
       images,
     } = req.body;
+    console.log(slug);
+    console.log(name);
+    console.log(req.method);
     try {
       const newProduct = await this.#services.createProductService({
         name,
-        slug: slug.toLowerCase(),
+        slug,
         title,
         description,
         categoryId,

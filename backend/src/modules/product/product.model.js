@@ -24,9 +24,7 @@ const productSchema = new mongoose.Schema(
       images_url: [{ type: String }],
       image_main_url: { type: String },
     },
-    comments: [
-      { type: mongoose.Types.ObjectId, ref: "Comment", required: true },
-    ],
+    comments: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
