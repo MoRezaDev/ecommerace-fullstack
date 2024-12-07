@@ -63,6 +63,32 @@
 
 /**
  * @swagger
+ *  /product/get-products-by-search:
+ *      post:
+ *          summary: get products by search Query
+ *          tags:
+ *              -   Product
+ *          requestBody:
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              query:
+ *                                  type: string
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              query:
+ *                                  type: string
+ *          responses:
+ *                  200:
+ *                      description: success!
+ */
+
+/**
+ * @swagger
  *  components:
  *          schemas:
  *              updateProductImages:
@@ -380,6 +406,6 @@
  *                              quantity:
  *                                  type: number
  *          responses:
- *              200:      
+ *              200:
  *                  description: success!
  */

@@ -62,6 +62,16 @@ class ProductController {
     return productObj;
   }
 
+  async getProductsBySearchService(query) {
+    const products = await this.#productModel.find({
+      name: { $regex: query, $options: "i" },
+    });
+    if (!products) {
+      throw new createHttpError.Forbidden("no products found!");
+    }
+    return products;
+  }
+
   async uploadProductImageMainService(file) {
     if (!file)
       throw new createHttpError.BadRequest(

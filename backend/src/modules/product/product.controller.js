@@ -28,6 +28,16 @@ class ProductController {
     }
   }
 
+  async getProductsBySearchController(req, res, next) {
+    const { query } = req.body;
+    try {
+      const products = await this.#services.getProductsBySearchService(query);
+      return res.json(products);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getProductBySlugController(req, res, next) {
     const { slug } = req.params;
 

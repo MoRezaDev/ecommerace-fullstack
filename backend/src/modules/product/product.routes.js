@@ -18,6 +18,7 @@ const {
   getAllProductsController,
   getProductBySlugController,
   addProductQuantityController,
+  getProductsBySearchController,
 } = require("./product.controller");
 
 const router = require("express").Router();
@@ -45,6 +46,7 @@ router.delete("/delete-product-images", deleteProductImagesController);
 router.post("/change-main-image", changeMainImageController);
 
 router.get("/get-all-products", getAllProductsController);
+router.post("/get-products-by-search", getProductsBySearchController);
 router.get("/:slug", getProductBySlugController);
 router.post("/get-product", getProductController);
 router.post("/create", createProductController);

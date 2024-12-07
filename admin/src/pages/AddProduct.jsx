@@ -73,7 +73,6 @@ export default function AddProduct() {
   };
 
   const handleMainImage = (e) => {
-    console.log(e.target);
     setMainImage(e.target.files[0]);
   };
 
@@ -91,13 +90,11 @@ export default function AddProduct() {
       );
 
       if (!res.ok) {
-        console.log("not ok");
         toast.error("مشکلی در آپلود بوجود آمده");
       }
       const data = await res.json();
       setValue("images.image_main_url", data.image_main_url);
       setMainImgButtons(false);
-      console.log(data);
     } catch (err) {
       toast.error("مشکلی در آپلود بوجود آمده");
     }
@@ -131,14 +128,11 @@ export default function AddProduct() {
       });
 
       if (!res.ok) {
-        console.log("not ok");
         toast.error("مشکلی در آپلود بوجود آمده");
       }
       const data = await res.json();
       setValue("images.images_url", data.images_url);
       setMainImgsButtons(false);
-
-      console.log(data);
     } catch (err) {
       toast.error("مشکلی در آپلود بوجود آمده");
     }
@@ -173,8 +167,6 @@ export default function AddProduct() {
     }
   }, [specification, setValue]);
 
-  console.log(watch("slug"));
-
   useEffect(() => {
     setIsLoadingCategory(true);
     const fetchCategories = async () => {
@@ -197,8 +189,6 @@ export default function AddProduct() {
   //for react-select style
   const isDarkMode = document.documentElement.classList.contains("dark");
 
-  console.log(isDarkMode);
-
   const selectStyles = {
     control: (styles) => ({
       ...styles,
@@ -214,6 +204,8 @@ export default function AddProduct() {
     }),
     input: (styles) => ({ ...styles, color: "#fff" }),
   };
+
+  console.log("rendered");
 
   return (
     <main className="w-full dark-mode transition duration-200">
