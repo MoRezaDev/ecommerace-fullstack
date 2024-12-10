@@ -21,10 +21,6 @@ body {
   font-family: "yekan-light";
 }
 
-.dark-mode-input {
-  @apply dark:bg-[#334155];
-}
-
 .navlink {
   @apply flex items-center gap-2 p-2 rounded hover:bg-gray-500/30 transition;
 }
@@ -35,6 +31,10 @@ body {
 
 .dark-mode {
   @apply dark:bg-[var(--sidebar-bg)] dark:text-white;
+}
+
+.dark-mode input,.dark-mode textarea {
+  @apply dark:bg-[#334155] dark:text-white;
 }
 
 .dark-mode-input {

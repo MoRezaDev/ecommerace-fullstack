@@ -4,15 +4,24 @@ import { useDebouncedValue } from "../../hooks/useDebouncedValue";
 import { useQuery } from "@tanstack/react-query";
 import { getProductsByQuerySearch } from "../../lib/api";
 
-export default function SearchEditProduct() {
+export default function SearchEditProduct({ onProductSelect }) {
   const [search, setSearch] = useState("");
   const debouncedValue = useDebouncedValue(search);
 
-  const { data: products, isLoading, isError } = useQuery({
+  const {
+    data: products,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["products", debouncedValue],
     queryFn: () => getProductsByQuerySearch(debouncedValue),
     enabled: !!debouncedValue,
   });
+
+  const handleProductClick = (product) => {
+    onProductSelect(product); // Pass product data to parent
+    setSearch(""); // Clear the search input
+  };
 
   return (
     <div className="relative max-w-[800px] mx-auto">
@@ -23,7 +32,7 @@ export default function SearchEditProduct() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="کالای مورد نظر خود را وارد کنید"
-          className="outline-none bg-transparent w-full"
+          className="outline-none !bg-transparent w-full"
           type="text"
         />
       </div>
@@ -32,22 +41,27 @@ export default function SearchEditProduct() {
       {search && (
         <div className="absolute top-full mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-64 overflow-y-auto">
           {isLoading && <p className="p-2 text-gray-500">Loading...</p>}
-          {isError && <p className="p-2 text-red-500">Error fetching products</p>}
+          {isError && (
+            <p className="p-2 text-red-500">Error fetching products</p>
+          )}
           {products?.length > 0 ? (
             <ul>
               {products.map((product) => (
                 <li
                   key={product._id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  className="p-2 hover:bg-gray-100 cursor-pointer flex gap-4 items-center"
+                  onClick={() => handleProductClick(product)} // Call the handler
                 >
-                  {product.name}
+                  <img
+                    src={product.images.image_main_url || ""}
+                    className="size-8 rounded-full object-cover"
+                  />
+                  <span>{product.name}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            !isLoading && (
-              <p className="p-2 text-gray-500">No products found</p>
-            )
+            !isLoading && !search && <p className="p-2 text-gray-500">No products found</p>
           )}
         </div>
       )}
